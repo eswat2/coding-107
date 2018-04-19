@@ -39,6 +39,7 @@
           </div>
           <textarea 
             v-model="source"
+            v-on:keyup.enter="generate"
             class="form-control" 
             rows="5" 
             placeholder="Enter text for matrix..."
