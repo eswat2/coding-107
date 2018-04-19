@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Coding 106</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          rel="stylesheet"
+          type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"
+            type="text/javascript"></script>
+    <script src="https://use.fontawesome.com/85640850f4.js"
+            type="text/javascript"></script>
+    <link href="main.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div id="wrapper" class="container mb-3">
+      <div id="app">
+        <button class="btn btn-default action" v-on:click="reset(true)">Clear</button>
+        <button class="btn btn-primary action" v-on:click="process">Run</button>
+        <h2 class="header">Matrix:</h2>
+        <div v-for="matrix in samples" class="matrix">
+          <div v-for="row in matrix">
+            <span v-for="item in row" class="badge badge-danger pad">{{item}}</span>
+          </div>
+        </div>
+        <hr>
+        <div class="output">
+          <div v-for="result in results">
+            <span v-for="item in result" v-bind:class="badgeFor(item)">{{item}}</span>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div id="form">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-chevron-right"></i></span>
+          </div>
+          <textarea 
+            v-model="source"
+            class="form-control" 
+            rows="5" 
+            placeholder="Enter text for matrix..."
+            ></textarea>
+        </div>
+        <button 
+          v-on:click="generate"
+          v-bind:disabled="isDisabled"
+          class="btn btn-primary action generate">Generate</button>
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>

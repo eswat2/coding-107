@@ -1,0 +1,45 @@
+#wrapper {
+  max-width: 450px;
+}
+
+.header {
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+.action {
+  float: right;
+}
+
+.generate {
+  margin-top: 10px;
+}
+
+.badge {
+  font-size: 14px;
+  font-family: monospace;
+}
+
+.white-space {
+  color: white;
+}
+
+.matrix {
+  display: inline-block;
+  margin-left: 14px;
+  margin-top: 10px;
+}
+
+.output {
+  min-height: 20px;
+  height: auto;
+}
+
+.pad {
+  margin-right: 4px;
+}
+
+::placeholder {
+  color: #cccccc !important;
+}
+
