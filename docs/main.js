@@ -1,7 +1,8 @@
 /*
- # Given a Two dimensional array, 
- # print out the letters, 
- # spiraling from the outside, in.
+ # Given: a Two dimensional array, 
+ # 1. print out the letters, 
+ # 2. spiraling from the outside, in.
+ #
  # [
  # [ 'H', 'A', 'V' ],
  # [ 'D', 'A', 'E' ],
