@@ -70,10 +70,11 @@ const app = new Vue({
       this.samples.push(matrix)
     },
     traverseRow: function(out, matrix, row, start, count, reverse) {
+      // console.log(out, matrix, row, start, count, reverse)
       const max = matrix.cols
       const tmp = matrix[row].slice(0, max)
       const list = (reverse ? tmp.reverse() : tmp).slice(start, count - 1)
-      console.log(matrix, tmp, list)
+      // console.log(matrix, tmp, list)
       list.forEach(function(item) {
         setTimeout(function() { out.push(item) }, (DELAY * matrix.tick))
         matrix.tick += 1
@@ -83,7 +84,7 @@ const app = new Vue({
       const max = matrix.rows
       const tmp = matrix.map(function(row) { return row[col] }).slice(0, max)
       const list = (reverse ? tmp.reverse() : tmp).slice(start, count - 1)
-      console.log(matrix, tmp, list)
+      // console.log(matrix, tmp, list)
       list.forEach(function(item) {
         setTimeout(function() { out.push(item) }, (DELAY * matrix.tick))
         matrix.tick += 1
@@ -95,7 +96,7 @@ const app = new Vue({
       let stop = cols * rows
       let next = 0
       while (matrix.tick < stop) {
-        console.log('-- ts: ', matrix.tick, stop, rows, cols, next)
+        // console.log('-- ts: ', matrix.tick, stop, rows, cols, next)
         this.traverseRow(out, matrix, next, next, cols, false)
         this.traverseCol(out, matrix, cols - 1, next, rows, false)
         this.traverseRow(out, matrix, rows - 1, next, cols, true)
@@ -103,6 +104,16 @@ const app = new Vue({
         rows -= 1
         cols -= 1
         next += 1
+        if ((next >= matrix.rows || next >= matrix.cols)) {
+          // NOTE: pluck the value from the center of the matrix...
+          if (matrix.rows === matrix.cols) {
+            const middle = Math.round((matrix.rows - 1) / 2)
+            const item = matrix[middle][middle]
+            console.log('-- pluck: ', middle, item, next, rows, cols)
+            setTimeout(function() { out.push(item) }, (DELAY * matrix.tick))
+          }
+          matrix.tick += 1
+        }
       }
     },
     process: function() {
@@ -113,7 +124,7 @@ const app = new Vue({
         const cols = matrix[0].length
         const list = []
         vm.results.push(list)
-        console.log('-- gen', list)
+        // console.log('-- gen', list)
         matrix.rows = rows
         matrix.cols = cols
         matrix.tick = 0
@@ -167,7 +178,7 @@ const form = new Vue({
       let last = 0
       let tick = 0
       next = cols - 1
-      console.log(rows, cols, next)
+      // console.log(rows, cols, next)
       while (tick < stop) {
         for (var i = 0; i < 4; i++) {
           const tmp = input.slice(last, next).split('')
@@ -179,10 +190,15 @@ const form = new Vue({
             break
           }
         }
+        if (tick == stop - 1) {
+          list.push([input.slice(stop - 1, stop)])
+          tick += 1
+        }
         rows -= 2
         cols -= 2
         next -= 2
       }
+      // console.log('-- split: ', list)
       return list
     },
     populateMatrix: function(matrix, input) {
@@ -195,8 +211,8 @@ const form = new Vue({
       let tag = 0
       let offset = 0
       let depth = 0
-      console.log(deepCopy(data))
-      console.log('--')
+      // console.log(deepCopy(data))
+      // console.log('--')
       data.some(function(list) {
         const rowp = step % 2 === 0
         const revp = side > 1
@@ -213,10 +229,10 @@ const form = new Vue({
               matrix[tag][i] = val
             }
           })
-          console.log('-- even: ', list, revp, tag, offset)
+          // console.log('-- even: ', list, revp, tag, offset)
         } else {
           if (depth != 0 && list.length < depth) {
-            console.log('-- depth: ', depth, list.length)
+            // console.log('-- depth: ', depth, list.length)
             for (let i = 0; i < depth - list.length + 1; i++) {
               list.unshift(null)
             }
@@ -227,7 +243,7 @@ const form = new Vue({
             }
           })
           depth = revp ? 0 : list.length + 1
-          console.log('-- odd: ', list, revp, tag, offset, depth)
+          // console.log('-- odd: ', list, revp, tag, offset, depth)
         }
         side += 1
         step += 1
@@ -251,13 +267,13 @@ const form = new Vue({
       })
     },
     generate: function() {
-      console.log('-- generate')
+      // console.log('-- generate')
       const input = this.source.trim().toUpperCase().replace(/\s/g, '')
       const len = input.length
       const cols = Math.floor(Math.sqrt(len))
       const rows = Math.ceil(len / cols)
       const count = cols * rows
-      console.log('-- generate: ', len, cols, rows, count)
+      // console.log('-- generate: ', len, cols, rows, count)
       const tmp = this.initMatrix(rows, cols, '-')
       this.populateMatrix(tmp, input)
       this.matrix = tmp
