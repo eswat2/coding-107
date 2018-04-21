@@ -70,30 +70,37 @@ const app = new Vue({
       this.samples.push(matrix)
     },
     traverseRow: function(out, matrix, row, start, count, reverse) {
-      // console.log(out, matrix, row, start, count, reverse)
-      const max = matrix.cols
-      const tmp = matrix[row].slice(0, max)
-      const list = (reverse ? tmp.reverse() : tmp).slice(start, count - 1)
-      // console.log(matrix, tmp, list)
-      list.forEach(function(item) {
-        setTimeout(function() { out.push(item) }, (DELAY * matrix.tick))
-        matrix.tick += 1
-      })
+      if (matrix.tick < matrix.stop) {
+        console.log(out, matrix, row, start, count, reverse)
+        const max = matrix.cols
+        const tmp = matrix[row].slice(0, max)
+        const list = (reverse ? tmp.reverse() : tmp).slice(start, count - 1)
+        console.log(matrix, tmp, list)
+        list.some(function(item) {
+          setTimeout(function() { out.push(item) }, (DELAY * matrix.tick))
+          matrix.tick += 1
+          return matrix.tick === matrix.stop
+        })
+      }
     },
     traverseCol: function(out, matrix, col, start, count, reverse) {
-      const max = matrix.rows
-      const tmp = matrix.map(function(row) { return row[col] }).slice(0, max)
-      const list = (reverse ? tmp.reverse() : tmp).slice(start, count - 1)
-      // console.log(matrix, tmp, list)
-      list.forEach(function(item) {
-        setTimeout(function() { out.push(item) }, (DELAY * matrix.tick))
-        matrix.tick += 1
-      })
+      if (matrix.tick < matrix.stop) {
+        const max = matrix.rows
+        const tmp = matrix.map(function(row) { return row[col] }).slice(0, max)
+        const list = (reverse ? tmp.reverse() : tmp).slice(start, count - 1)
+        console.log(matrix, tmp, list)
+        list.some(function(item) {
+          setTimeout(function() { out.push(item) }, (DELAY * matrix.tick))
+          matrix.tick += 1
+          return matrix.tick === matrix.stop
+        })
+      }
     },
     traverseSpiral: function(out, matrix) {
       let cols = matrix.cols
       let rows = matrix.rows
       let stop = cols * rows
+      matrix.stop = stop
       let next = 0
       while (matrix.tick < stop) {
         // console.log('-- ts: ', matrix.tick, stop, rows, cols, next)
@@ -114,6 +121,7 @@ const app = new Vue({
           }
           matrix.tick += 1
         }
+        console.log('-- while: ', matrix.stop, matrix.tick)
       }
     },
     process: function() {
