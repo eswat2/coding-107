@@ -185,26 +185,32 @@ const form = new Vue({
       let tick = 0
       next = cols - 1
 
-      while (tick < stop) {
-        for (var i = 0; i < 4; i++) {
-          const tmp = input.slice(last, next).split('')
-          last = next
-          next += i % 2 === 0 ? rows - 1 : cols - 1
-          tick += tmp.length
-          list.push(tmp)
-          if (tick == stop) {
-            break
+      if (cols == 1 && rows == 1 && stop == 1) {
+        // NOTE:  special case to handle a 1x1 matrix...
+        list = [
+          [input]
+        ]
+      } else {
+        while (tick < stop) {
+          for (var i = 0; i < 4; i++) {
+            const tmp = input.slice(last, next).split('')
+            last = next
+            next += i % 2 === 0 ? rows - 1 : cols - 1
+            tick += tmp.length
+            list.push(tmp)
+            if (tick == stop) {
+              break
+            }
           }
+          if (tick == stop - 1) {
+            list.push([input.slice(stop - 1, stop)])
+            tick += 1
+          }
+          rows -= 2
+          cols -= 2
+          next -= 2
         }
-        if (tick == stop - 1) {
-          list.push([input.slice(stop - 1, stop)])
-          tick += 1
-        }
-        rows -= 2
-        cols -= 2
-        next -= 2
       }
-
       return list
     },
     populateMatrix: function(matrix, input) {
